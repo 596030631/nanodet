@@ -30,6 +30,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Size;
+import android.view.Display;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CAMERA = 1;
     private static final int REQUEST_PICK_IMAGE = 2;
-    private static String[] PERMISSIONS_CAMERA = {
+    private static final String[] PERMISSIONS_CAMERA = {
             Manifest.permission.CAMERA
     };
     private ImageView resultImageView;
@@ -70,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
     private double threshold = 0.3, nms_threshold = 0.7;
     private TextureView viewFinder;
 
-    private AtomicBoolean detecting = new AtomicBoolean(false);
-    private AtomicBoolean detectPhoto = new AtomicBoolean(false);
+    private final AtomicBoolean detecting = new AtomicBoolean(false);
+    private final AtomicBoolean detectPhoto = new AtomicBoolean(false);
 
     private long startTime = 0;
     private long endTime = 0;
@@ -200,9 +201,11 @@ public class MainActivity extends AppCompatActivity {
 
         float[] rotations = {0, 90, 180, 270};
         // Correct preview output to account for display rotation
-        float rotationDegrees = rotations[viewFinder.getDisplay().getRotation()];
-
-        matrix.postRotate(-rotationDegrees, centerX, centerY);
+        Display display = viewFinder.getDisplay();
+        if (display != null) {
+            float rotationDegrees = rotations[display.getRotation()];
+            matrix.postRotate(-rotationDegrees, centerX, centerY);
+        }
 
         // Finally, apply transformations to our TextureView
         viewFinder.setTransform(matrix);
@@ -214,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
         PreviewConfig previewConfig = new PreviewConfig.Builder()
                 .setLensFacing(CAMERA_ID)
 //                .setTargetAspectRatio()  // 宽高比
-                .setTargetResolution(new Size(320, 320))  // 分辨率
+                .setTargetResolution(new Size(640, 480))  // 分辨率
                 .build();
 
         Preview preview = new Preview(previewConfig);

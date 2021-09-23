@@ -2,15 +2,19 @@
 // Created by 邓昊晴 on 14/6/2020.
 //
 
+#include <android/asset_manager.h>
+#include <android/bitmap.h>
+#include <vector>
+#include "net.h"
 #include "YoloV5.h"
 
-bool YoloV5::hasGPU = true;
+bool YoloV5::hasGPU = false;
 YoloV5 *YoloV5::detector = nullptr;
 
 YoloV5::YoloV5(AAssetManager *mgr, const char *param, const char *bin, bool useGPU) {
     Net = new ncnn::Net();
     // opt 需要在加载前设置
-    hasGPU = ncnn::get_gpu_count() > 0;
+//    hasGPU = ncnn::get_gpu_count() > 0;
     Net->opt.use_vulkan_compute = hasGPU && useGPU;  // gpu
     Net->opt.use_fp16_arithmetic = true;  // fp16运算加速
     Net->load_param(mgr, param);
@@ -33,8 +37,8 @@ std::vector<BoxInfo> YoloV5::detect(JNIEnv *env, jobject image, float threshold,
     auto ex = Net->create_extractor();
     ex.set_light_mode(true);
     ex.set_num_threads(4);
-    hasGPU = ncnn::get_gpu_count() > 0;
-    ex.set_vulkan_compute(hasGPU);
+//    hasGPU = ncnn::get_gpu_count() > 0;
+//    ex.set_vulkan_compute(hasGPU);
     ex.input(0, in_net);
     std::vector<BoxInfo> result;
     for (const auto &layer: layers) {

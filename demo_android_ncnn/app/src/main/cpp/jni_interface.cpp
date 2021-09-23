@@ -1,25 +1,25 @@
 #include <jni.h>
 #include <string>
-#include <gpu.h>
 #include <android/asset_manager_jni.h>
 #include <android/log.h>
+#include <vector>
 #include "YoloV5.h"
 #include "YoloV4.h"
 #include "NanoDet.h"
 
 
 JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
-    ncnn::create_gpu_instance();
-    if (ncnn::get_gpu_count() > 0) {
-        YoloV5::hasGPU = true;
-        YoloV4::hasGPU = true;
-        NanoDet::hasGPU = true;
-    }
+//    ncnn::create_gpu_instance();
+//    if (ncnn::get_gpu_count() > 0) {
+//        YoloV5::hasGPU = true;
+//        YoloV4::hasGPU = true;
+//        NanoDet::hasGPU = true;
+//    }
     return JNI_VERSION_1_6;
 }
 
 JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
-    ncnn::destroy_gpu_instance();
+//    ncnn::destroy_gpu_instance();
 }
 
 

@@ -43,7 +43,8 @@ int activation_function_softmax(const _Tp* src, _Tp* dst, int length)
 NanoDet::NanoDet(AAssetManager *mgr, const char *param, const char *bin, bool useGPU) {
     this->Net = new ncnn::Net();
     // opt 需要在加载前设置
-    hasGPU = ncnn::get_gpu_count() > 0;
+    hasGPU = false;
+//    hasGPU = ncnn::get_gpu_count() > 0;
     this->Net->opt.use_vulkan_compute = false; //hasGPU && useGPU;  // gpu
     this->Net->opt.use_fp16_arithmetic = true;  // fp16运算加速
     this->Net->opt.use_fp16_packed = true;
@@ -80,7 +81,8 @@ std::vector<BoxInfo> NanoDet::detect(JNIEnv *env, jobject image, float score_thr
     auto ex = this->Net->create_extractor();
     ex.set_light_mode(true);
     ex.set_num_threads(4);
-    hasGPU = ncnn::get_gpu_count() > 0;
+//    hasGPU = ncnn::get_gpu_count() > 0;
+    hasGPU = false;
     //ex.set_vulkan_compute(hasGPU);
     ex.input("input.1", input);
     std::vector<std::vector<BoxInfo>> results;
